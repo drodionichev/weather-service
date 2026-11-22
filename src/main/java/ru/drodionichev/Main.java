@@ -34,8 +34,10 @@ public class Main {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree("{\"fact\": {\"temp\": 2}}");
+            JsonNode root = mapper.readTree(response.body());
             int temp = root.path("fact").path("temp").asInt();
+
+            System.out.println("Текущая температура: " + temp);
 
             System.out.println(response.body());
             System.out.println(response.statusCode());
