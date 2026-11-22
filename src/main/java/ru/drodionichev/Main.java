@@ -19,7 +19,7 @@ public class Main {
         double lat = 59.93;
         int limit = 3;
 
-        if (key == null) {
+        if (key == null || key.isBlank()) {
             System.out.println("Системная ошибка обратитесь в чат поддержки");
         } else {
             String weatherUri = baseUrl + "?" + "lon=" + lon + "&" + "lat=" + lat + "&" + "limit=" + limit;
@@ -36,11 +36,22 @@ public class Main {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response.body());
             int temp = root.path("fact").path("temp").asInt();
+            int humidity = root.path("fact").path("humidity").asInt();
+            String nameInfo = root.path("info").path("tzinfo").path("name").asText();
+
 
             System.out.println("Текущая температура: " + temp);
 
+            double sum = 0;
+            for (JsonNode day: root.path("forecasts")){
+                double tempAvg = day.path("parts").path("day").path("temp_avg").asDouble();
+                sum += tempAvg;
+            }
+            System.out.println("Средняя температура: " + sum/limit);
+
             System.out.println(response.body());
             System.out.println(response.statusCode());
+
         }
     }
 }
