@@ -13,6 +13,8 @@ import java.net.http.HttpResponse;
 public class Main {
     public static void main(String[] args) throws Exception {
 
+        WeatherClient weatherClient = new WeatherClient();
+
         String key = System.getenv("YANDEX_WEATHER_KEY");
         String baseUrl = "https://api.weather.yandex.ru/v2/forecast";
         double lon = 30.34;
@@ -51,6 +53,14 @@ public class Main {
 
             System.out.println(response.body());
             System.out.println(response.statusCode());
+
+
+            String json = weatherClient.getWeather(lat, lon, limit);
+            WeatherCalculator weatherCalculator = new WeatherCalculator(json);
+            System.out.println(weatherCalculator.getCurrentTemperature());
+
+
+
 
         }
     }
